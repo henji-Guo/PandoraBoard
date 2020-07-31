@@ -1,1 +1,3 @@
 # PandoraBoard
+
+- personal exercise
