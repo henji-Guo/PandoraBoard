@@ -1,0 +1,256 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'F:\Keil_v5\ARM\ARMCLANG\Bin'
+Build target 'STM32L475'
+compiling dma.c...
+../Core/Src/main.c(29): warning: In file included from..../LED\LED.h(13): warning: this function declaration is not a prototype [-Wstrict-prototypes]
+void LED_init();
+             ^
+              void
+./LED\LED.h(16): warning: no newline at end of file [-Wnewline-eof]
+#endif
+      ^
+../Core/Src/main.c(72): warning: unused variable 'b' [-Wunused-variable]
+  uint16_t a,b;
+             ^
+../Core/Src/main.c(71): warning: unused variable 'test' [-Wunused-variable]
+  uint8_t test[]="123456789";
+          ^
+../Core/Src/main.c(72): warning: unused variable 'a' [-Wunused-variable]
+  uint16_t a,b;
+           ^
+../Core/Src/main.c(21): warning: In file included from...../Core/Inc/main.h(31): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(449): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(226): warning: padding struct 'struct __UART_HandleTypeDef' with 2 bytes to align 'RxISR' [-Wpadded]
+  void (*RxISR)(struct __UART_HandleTypeDef *huart); /*!< Function pointer on Rx IRQ handler */
+         ^
+../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(236): warning: padding struct 'struct __UART_HandleTypeDef' with 3 bytes to align 'gState' [-Wpadded]
+  __IO HAL_UART_StateTypeDef    gState;              /*!< UART state information related to global Handle management
+                                ^
+../Core/Src/main.c(21): warning: In file included from...../Core/Inc/main.h(31): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(265): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_dma.h(123): warning: padding struct 'struct __DMA_HandleTypeDef' with 2 bytes to align 'Parent' [-Wpadded]
+  void                  *Parent;                                                        /*!< Parent object state                  */
+                         ^
+../Core/Src/main.c(168): warning: unused parameter 'GPIO_Pin' [-Wunused-parameter]
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+                                     ^
+../Core/Src/main.c(209): error: too few arguments to function call, expected 4, have 3
+  HAL_UART_Transmit(&huart1,(uint8_t*)&ch,HAL_MAX_DELAY);
+  ~~~~~~~~~~~~~~~~~                                    ^
+../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(1616): note: 'HAL_UART_Transmit' declared here
+HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+^
+../Core/Src/main.c(207): warning: unused parameter 'f' [-Wunused-parameter]
+int fputc(int ch, FILE *f)
+                        ^
+../Core/Src/main.c(212): error: conflicting types for 'fgetc'
+int fgetc(int ch, FILE *f)
+    ^
+F:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h(649): note: previous declaration is here
+extern _ARMABI int fgetc(FILE * /*stream*/) __attribute__((__nonnull__(1)));
+                   ^
+../Core/Src/main.c(214): error: redefinition of 'ch' with a different type: 'uint8_t' (aka 'unsigned char') vs 'int'
+  uint8_t ch;
+          ^
+../Core/Src/main.c(212): note: previous definition is here
+int fgetc(int ch, FILE *f)
+              ^
+../Core/Src/main.c(49): warning: no previous extern declaration for non-static variable 'recv_buf' [-Wmissing-variable-declarations]
+uint8_t recv_buf[10];
+        ^
+../Core/Src/main.c(49): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+uint8_t recv_buf[10];
+^
+11 warnings and 3 errors generated.
+compiling main.c...
+compiling gpio.c...
+../Core/Src/usart.c(21): warning: In file included from...../Core/Inc\usart.h(27): warning: In file included from...../Core/Inc/main.h(31): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(449): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(226): warning: padding struct 'struct __UART_HandleTypeDef' with 2 bytes to align 'RxISR' [-Wpadded]
+  void (*RxISR)(struct __UART_HandleTypeDef *huart); /*!< Function pointer on Rx IRQ handler */
+         ^
+../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(236): warning: padding struct 'struct __UART_HandleTypeDef' with 3 bytes to align 'gState' [-Wpadded]
+  __IO HAL_UART_StateTypeDef    gState;              /*!< UART state information related to global Handle management
+                                ^
+../Core/Src/usart.c(21): warning: In file included from...../Core/Inc\usart.h(27): warning: In file included from...../Core/Inc/main.h(31): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(265): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_dma.h(123): warning: padding struct 'struct __DMA_HandleTypeDef' with 2 bytes to align 'Parent' [-Wpadded]
+  void                  *Parent;                                                        /*!< Parent object state                  */
+                         ^
+../Core/Src/usart.c(28): warning: no previous extern declaration for non-static variable 'hdma_usart1_rx' [-Wmissing-variable-declarations]
+DMA_HandleTypeDef hdma_usart1_rx;
+                  ^
+../Core/Src/usart.c(28): note: declare 'static' if the variable is not intended to be used outside of this translation unit
+DMA_HandleTypeDef hdma_usart1_rx;
+^
+4 warnings generated.
+compiling usart.c...
+../Core/Src/stm32l4xx_it.c(84): warning: function 'HardFault_Handler' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+{
+^
+../Core/Src/stm32l4xx_it.c(99): warning: function 'MemManage_Handler' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+{
+^
+../Core/Src/stm32l4xx_it.c(114): warning: function 'BusFault_Handler' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+{
+^
+../Core/Src/stm32l4xx_it.c(129): warning: function 'UsageFault_Handler' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+{
+^
+../Core/Src/stm32l4xx_it.c(22): warning: In file included from...../Core/Inc\main.h(31): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(265): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_dma.h(123): warning: padding struct 'struct __DMA_HandleTypeDef' with 2 bytes to align 'Parent' [-Wpadded]
+  void                  *Parent;                                                        /*!< Parent object state                  */
+                         ^
+5 warnings generated.
+compiling stm32l4xx_it.c...
+compiling stm32l4xx_hal_tim.c...
+compiling stm32l4xx_hal_tim_ex.c...
+compiling stm32l4xx_hal_msp.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c(44): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(449): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(226): warning: padding struct 'struct __UART_HandleTypeDef' with 2 bytes to align 'RxISR' [-Wpadded]
+  void (*RxISR)(struct __UART_HandleTypeDef *huart); /*!< Function pointer on Rx IRQ handler */
+         ^
+../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(236): warning: padding struct 'struct __UART_HandleTypeDef' with 3 bytes to align 'gState' [-Wpadded]
+  __IO HAL_UART_StateTypeDef    gState;              /*!< UART state information related to global Handle management
+                                ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c(44): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(265): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_dma.h(123): warning: padding struct 'struct __DMA_HandleTypeDef' with 2 bytes to align 'Parent' [-Wpadded]
+  void                  *Parent;                                                        /*!< Parent object state                  */
+                         ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c(44): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(449): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(1572): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h(47): warning: padding size of 'UART_WakeUpTypeDef' with 1 byte to alignment boundary [-Wpadded]
+typedef struct
+        ^
+4 warnings generated.
+compiling stm32l4xx_hal_uart_ex.c...
+compiling stm32l4xx_hal.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c(157): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(449): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(226): warning: padding struct 'struct __UART_HandleTypeDef' with 2 bytes to align 'RxISR' [-Wpadded]
+  void (*RxISR)(struct __UART_HandleTypeDef *huart); /*!< Function pointer on Rx IRQ handler */
+         ^
+../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_uart.h(236): warning: padding struct 'struct __UART_HandleTypeDef' with 3 bytes to align 'gState' [-Wpadded]
+  __IO HAL_UART_StateTypeDef    gState;              /*!< UART state information related to global Handle management
+                                ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c(157): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(265): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_dma.h(123): warning: padding struct 'struct __DMA_HandleTypeDef' with 2 bytes to align 'Parent' [-Wpadded]
+  void                  *Parent;                                                        /*!< Parent object state                  */
+                         ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c(1081): warning: cast from 'uint8_t *' (aka 'unsigned char *') to 'uint16_t *' (aka 'unsigned short *') increases required alignment from 1 to 2 [-Wcast-align]
+      pdata16bits = (uint16_t *) pData;
+                    ^~~~~~~~~~~~~~~~~~
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c(1175): warning: cast from 'uint8_t *' (aka 'unsigned char *') to 'uint16_t *' (aka 'unsigned short *') increases required alignment from 1 to 2 [-Wcast-align]
+      pdata16bits = (uint16_t *) pData;
+                    ^~~~~~~~~~~~~~~~~~
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c(3059): warning: enumeration values 'UART_CLOCKSOURCE_PCLK2' and 'UART_CLOCKSOURCE_UNDEFINED' not explicitly handled in switch [-Wswitch-enum]
+    switch (clocksource)
+            ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c(3132): warning: enumeration value 'UART_CLOCKSOURCE_UNDEFINED' not explicitly handled in switch [-Wswitch-enum]
+    switch (clocksource)
+            ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c(3177): warning: enumeration value 'UART_CLOCKSOURCE_UNDEFINED' not explicitly handled in switch [-Wswitch-enum]
+    switch (clocksource)
+            ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c(3865): warning: cast from 'uint8_t *' (aka 'unsigned char *') to 'uint16_t *' (aka 'unsigned short *') increases required alignment from 1 to 2 [-Wcast-align]
+      tmp = (uint16_t *) huart->pTxBuffPtr;
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c(4052): warning: cast from 'uint8_t *' (aka 'unsigned char *') to 'uint16_t *' (aka 'unsigned short *') increases required alignment from 1 to 2 [-Wcast-align]
+    tmp = (uint16_t *) huart->pRxBuffPtr ;
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+10 warnings generated.
+compiling stm32l4xx_hal_uart.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c(50): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(341): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_i2c.h(215): warning: padding struct 'struct __I2C_HandleTypeDef' with 1 byte to align 'ErrorCode' [-Wpadded]
+  __IO uint32_t              ErrorCode;      /*!< I2C Error code                            */
+                             ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c(50): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(265): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_dma.h(123): warning: padding struct 'struct __DMA_HandleTypeDef' with 2 bytes to align 'Parent' [-Wpadded]
+  void                  *Parent;                                                        /*!< Parent object state                  */
+                         ^
+2 warnings generated.
+compiling stm32l4xx_hal_i2c_ex.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c(308): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(341): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_i2c.h(215): warning: padding struct 'struct __I2C_HandleTypeDef' with 1 byte to align 'ErrorCode' [-Wpadded]
+  __IO uint32_t              ErrorCode;      /*!< I2C Error code                            */
+                             ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c(308): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(265): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_dma.h(123): warning: padding struct 'struct __DMA_HandleTypeDef' with 2 bytes to align 'Parent' [-Wpadded]
+  void                  *Parent;                                                        /*!< Parent object state                  */
+                         ^
+2 warnings generated.
+compiling stm32l4xx_hal_i2c.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c(946): warning: embedding a directive within macro arguments has undefined behavior [-Wembedded-directive]
+#if defined(RCC_PLLP_SUPPORT)
+ ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c(948): warning: embedding a directive within macro arguments has undefined behavior [-Wembedded-directive]
+#endif
+ ^
+2 warnings generated.
+compiling stm32l4xx_hal_rcc.c...
+compiling stm32l4xx_hal_rcc_ex.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c(90): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(329): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_flash.h(127): warning: padding struct 'FLASH_ProcessTypeDef' with 3 bytes to align 'ErrorCode' [-Wpadded]
+  __IO uint32_t               ErrorCode;         /* FLASH error code */
+                              ^
+../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_flash.h(129): warning: padding struct 'FLASH_ProcessTypeDef' with 3 bytes to align 'Address' [-Wpadded]
+  __IO uint32_t               Address;           /* Internal variable to save address selected for program in IT context */
+                              ^
+../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_flash.h(124): warning: padding size of 'FLASH_ProcessTypeDef' with 3 bytes to alignment boundary [-Wpadded]
+typedef struct
+        ^
+3 warnings generated.
+compiling stm32l4xx_hal_flash.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c(63): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(329): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_flash.h(127): warning: padding struct 'FLASH_ProcessTypeDef' with 3 bytes to align 'ErrorCode' [-Wpadded]
+  __IO uint32_t               ErrorCode;         /* FLASH error code */
+                              ^
+../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_flash.h(129): warning: padding struct 'FLASH_ProcessTypeDef' with 3 bytes to align 'Address' [-Wpadded]
+  __IO uint32_t               Address;           /* Internal variable to save address selected for program in IT context */
+                              ^
+../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_flash.h(124): warning: padding size of 'FLASH_ProcessTypeDef' with 3 bytes to alignment boundary [-Wpadded]
+typedef struct
+        ^
+3 warnings generated.
+compiling stm32l4xx_hal_flash_ex.c...
+compiling stm32l4xx_hal_flash_ramfunc.c...
+compiling stm32l4xx_hal_gpio.c...
+compiling stm32l4xx_hal_dma_ex.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c(90): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(265): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_dma.h(123): warning: padding struct 'struct __DMA_HandleTypeDef' with 2 bytes to align 'Parent' [-Wpadded]
+  void                  *Parent;                                                        /*!< Parent object state                  */
+                         ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c(910): warning: enumeration value 'HAL_DMA_XFER_ALL_CB_ID' not explicitly handled in switch [-Wswitch-enum]
+    switch (CallbackID)
+            ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c(986): warning: default label in switch which covers all enumeration values [-Wcovered-switch-default]
+    default:
+    ^
+3 warnings generated.
+compiling stm32l4xx_hal_dma.c...
+compiling stm32l4xx_hal_pwr.c...
+compiling stm32l4xx_hal_pwr_ex.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c(238): warning: function 'HAL_NVIC_SystemReset' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+{
+^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c(105): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal.h(30): warning: In file included from...../Core/Inc\stm32l4xx_hal_conf.h(273): warning: In file included from...../Drivers/STM32L4xx_HAL_Driver/Inc\stm32l4xx_hal_cortex.h(56): warning: padding struct 'MPU_Region_InitTypeDef' with 2 bytes to align 'BaseAddress' [-Wpadded]
+  uint32_t               BaseAddress;           /*!< Specifies the base address of the region to protect.                           */
+                         ^
+2 warnings generated.
+compiling stm32l4xx_hal_cortex.c...
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c(442): warning: enumeration values 'HAL_EXTI_RISING_CB_ID' and 'HAL_EXTI_FALLING_CB_ID' not explicitly handled in switch [-Wswitch-enum]
+  switch (CallbackID)
+          ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c(543): warning: unused parameter 'Edge' [-Wunused-parameter]
+uint32_t HAL_EXTI_GetPending(EXTI_HandleTypeDef *hexti, uint32_t Edge)
+                                                                 ^
+../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c(579): warning: unused parameter 'Edge' [-Wunused-parameter]
+void HAL_EXTI_ClearPending(EXTI_HandleTypeDef *hexti, uint32_t Edge)
+                                                               ^
+3 warnings generated.
+compiling stm32l4xx_hal_exti.c...
+compiling system_stm32l4xx.c...
+LED/LED.c(1): warning: In file included from..../LED/LED.h(13): warning: this function declaration is not a prototype [-Wstrict-prototypes]
+void LED_init();
+             ^
+              void
+./LED/LED.h(16): warning: no newline at end of file [-Wnewline-eof]
+#endif
+      ^
+LED/LED.c(8): warning: no previous prototype for function 'LED_init' [-Wmissing-prototypes]
+void LED_init()
+     ^
+./LED/LED.h(13): note: this declaration is not a prototype; add 'void' to make it a prototype for a zero-parameter function
+void LED_init();
+     ^
+              void
+LED/LED.c(78): warning: implicit conversion changes signedness: 'int' to 'uint32_t' (aka 'unsigned int') [-Wsign-conversion]
+        HAL_Delay(speed);
+        ~~~~~~~~~ ^~~~~
+LED/LED.c(35): warning: function 'LED_streamlight' could be declared with attribute 'noreturn' [-Wmissing-noreturn]
+{
+^
+LED/LED.c(131): warning: no newline at end of file [-Wnewline-eof]
+}
+ ^
+6 warnings generated.
+compiling LED.c...
+"STM32L475\STM32L475.axf" - 3 Error(s), 60 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:09
