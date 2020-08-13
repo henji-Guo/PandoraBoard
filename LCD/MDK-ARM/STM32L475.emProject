@@ -1,0 +1,102 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution Name="STM32L475" target="8" version="2">
+  <project Name="STM32L475">
+    <configuration
+      Name="Common"
+      arm_architecture="v7EM"
+      arm_core_type="Cortex-M4"
+      arm_endian="Little"
+      arm_fpu_type="FPv4-SP-D16"
+      arm_simulator_memory_simulation_parameter="RX 08000000,00080000,FFFFFFFF;RWX 20000000,00018000,CDCDCDCD"
+      arm_target_device_name="STM32L475VE"
+      arm_target_interface_type="SWD"
+      debug_start_from_entry_point_symbol="No"
+      debug_target_connection="J-Link"
+      linker_section_placements_segments="FLASH1 RX 0x08000000 0x00080000;RAM1 RWX 0x20000000 0x00018000"
+      project_directory=""
+      project_type="Externally Built Executable" />
+    <configuration
+      BUILD_OPTIONS="ARM CLANG"
+      Name="External Keil ARMCLANG"
+      build_generic_options_file_name="$(StudioDir)/targets/ARMCLANG_build_options.xml" />
+    <configuration
+      Name="STM32L475 External"
+      armasm_cl_cpu="Cortex-M4"
+      armclang_cl_cpu="Cortex-M4"
+      armclang_cl_enable_debug_info="Yes"
+      armclang_cl_optimization_level="Level 1"
+      asm_additional_options_backup="--cpu=Cortex-M4"
+      build_intermediate_directory="STM32L475"
+      build_output_directory="STM32L475"
+      build_output_file_name="STM32L475/STM32L475.axf"
+      c_additional_options_backup="-mcpu=Cortex-M4;-O1;-g"
+      link_additional_options_backup="--cpu=Cortex-M4;--ro_base=0x08000000;--rw_base=0x20000000;--first=__Vectors"
+      linker_additional_options="--ro_base=0x08000000;--rw_base=0x20000000;--first=__Vectors" />
+    <configuration
+      CMSIS_CORE="Yes"
+      Name="STM32L475"
+      c_preprocessor_definitions="USE_HAL_DRIVER;STM32L475xx"
+      c_user_include_directories="../Core/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../Drivers/CMSIS/Include;./LED;./BEEP;./MOTOR;./LCD" />
+    <folder Name="Application/MDK-ARM">
+      <file file_name="startup_stm32l475xx.s">
+        <configuration Name="Internal" build_exclude_from_build="Yes" />
+      </file>
+    </folder>
+    <folder Name="Application/User/Core">
+      <file file_name="../Core/Src/main.c" />
+      <file file_name="../Core/Src/gpio.c" />
+      <file file_name="../Core/Src/spi.c" />
+      <file file_name="../Core/Src/tim.c" />
+      <file file_name="../Core/Src/usart.c" />
+      <file file_name="../Core/Src/stm32l4xx_it.c" />
+      <file file_name="../Core/Src/stm32l4xx_hal_msp.c" />
+    </folder>
+    <folder Name="Drivers/STM32L4xx_HAL_Driver">
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ramfunc.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_exti.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.c" />
+      <file file_name="../Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.c" />
+    </folder>
+    <folder Name="Drivers/CMSIS">
+      <file file_name="../Core/Src/system_stm32l4xx.c" />
+    </folder>
+    <folder Name="LED">
+      <file file_name="./LED/LED.c" />
+    </folder>
+    <folder Name="BEEP">
+      <file file_name="./BEEP/BEEP.c" />
+    </folder>
+    <folder Name="MOTOR">
+      <file file_name="./MOTOR/MOTOR.c" />
+    </folder>
+    <folder Name="LCD">
+      <file file_name="./LCD/LCD.c" />
+    </folder>
+    <folder Name="::CMSIS" />
+  </project>
+  <configuration
+    Name="External Keil ARMCLANG"
+    hidden="Yes"
+    macros="KEIL_TOOLKIT_DIR=F:/Keil_v5/ARM" />
+  <configuration Name="STM32L475" hidden="Yes" />
+  <configuration
+    Name="STM32L475 External"
+    inherited_configurations="External Keil ARMCLANG;STM32L475" />
+</solution>

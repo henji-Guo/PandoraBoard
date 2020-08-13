@@ -1,0 +1,2 @@
+tx_mutex_cleanup.c:76:7:_tx_mutex_cleanup	56	static,ignoring_inline_asm
+tx_mutex_cleanup.c:255:7:_tx_mutex_thread_release	40	static,ignoring_inline_asm

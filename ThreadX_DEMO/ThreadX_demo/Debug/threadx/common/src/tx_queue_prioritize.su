@@ -1,0 +1,1 @@
+tx_queue_prioritize.c:73:7:_tx_queue_prioritize	72	static,ignoring_inline_asm
