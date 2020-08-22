@@ -21,6 +21,7 @@ OBJCOPY_BIN :=
 SUBDIRS := \
 Core/Src \
 Core/Startup \
+Core/examples \
 Drivers/STM32L4xx_HAL_Driver/Src \
 threadx/common/src \
 threadx/ports/cortex_m4/gnu/src \

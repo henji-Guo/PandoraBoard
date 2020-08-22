@@ -1,1 +1,1 @@
-tx_trace_event_unfilter.c:72:7:_tx_trace_event_unfilter	24	static
+tx_trace_event_unfilter.c:72:7:_tx_trace_event_unfilter	16	static

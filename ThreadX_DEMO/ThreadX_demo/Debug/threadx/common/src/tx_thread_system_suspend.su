@@ -1,1 +1,1 @@
-tx_thread_system_suspend.c:81:7:_tx_thread_system_suspend	128	static,ignoring_inline_asm
+tx_thread_system_suspend.c:81:7:_tx_thread_system_suspend	160	static,ignoring_inline_asm

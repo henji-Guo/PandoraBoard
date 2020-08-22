@@ -1,1 +1,1 @@
-tx_timer_change.c:73:7:_tx_timer_change	40	static,ignoring_inline_asm
+tx_timer_change.c:73:7:_tx_timer_change	56	static,ignoring_inline_asm

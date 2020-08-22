@@ -127,6 +127,8 @@ typedef unsigned short                          USHORT;
 #define TX_TRACE_TIME_MASK                      0x0000FFFFUL
 
 */
+/* 使能跟踪 */
+#define TX_ENABLE_EVENT_TRACE
 
 #ifndef TX_TRACE_TIME_SOURCE
 #define TX_TRACE_TIME_SOURCE                    *((ULONG *) 0xE0001004)  

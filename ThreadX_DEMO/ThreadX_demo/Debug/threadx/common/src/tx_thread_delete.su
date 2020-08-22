@@ -1,1 +1,1 @@
-tx_thread_delete.c:72:7:_tx_thread_delete	48	static,ignoring_inline_asm
+tx_thread_delete.c:72:7:_tx_thread_delete	64	static,ignoring_inline_asm

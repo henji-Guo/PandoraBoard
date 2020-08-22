@@ -1,1 +1,1 @@
-tx_trace_enable.c:84:7:_tx_trace_enable	32	static
+tx_trace_enable.c:84:7:_tx_trace_enable	152	static,ignoring_inline_asm

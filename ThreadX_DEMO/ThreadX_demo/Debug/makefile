@@ -11,6 +11,7 @@ RM := rm -rf
 -include threadx/ports/cortex_m4/gnu/src/subdir.mk
 -include threadx/common/src/subdir.mk
 -include Drivers/STM32L4xx_HAL_Driver/Src/subdir.mk
+-include Core/examples/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include subdir.mk
@@ -48,8 +49,8 @@ ThreadX_demo.bin \
 all: ThreadX_demo.elf secondary-outputs
 
 # Tool invocations
-ThreadX_demo.elf: $(OBJS) $(USER_OBJS) F:\vscodespace\STM32CubeIDE_1.3.0\ThreadX_demo\STM32L475VETX_FLASH.ld
-	arm-none-eabi-gcc -o "ThreadX_demo.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"F:\vscodespace\STM32CubeIDE_1.3.0\ThreadX_demo\STM32L475VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ThreadX_demo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+ThreadX_demo.elf: $(OBJS) $(USER_OBJS) F:\vscodespace\PandoraBoard\ThreadX_DEMO\ThreadX_demo\STM32L475VETX_FLASH.ld
+	arm-none-eabi-gcc -o "ThreadX_demo.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"F:\vscodespace\PandoraBoard\ThreadX_DEMO\ThreadX_demo\STM32L475VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ThreadX_demo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

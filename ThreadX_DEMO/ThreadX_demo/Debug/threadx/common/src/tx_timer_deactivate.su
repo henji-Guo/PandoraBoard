@@ -1,1 +1,1 @@
-tx_timer_deactivate.c:70:7:_tx_timer_deactivate	56	static,ignoring_inline_asm
+tx_timer_deactivate.c:70:7:_tx_timer_deactivate	72	static,ignoring_inline_asm

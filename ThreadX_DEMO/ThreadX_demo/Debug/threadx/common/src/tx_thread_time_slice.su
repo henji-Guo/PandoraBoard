@@ -1,1 +1,1 @@
-tx_thread_time_slice.c:74:7:_tx_thread_time_slice	24	static,ignoring_inline_asm
+tx_thread_time_slice.c:74:7:_tx_thread_time_slice	56	static,ignoring_inline_asm

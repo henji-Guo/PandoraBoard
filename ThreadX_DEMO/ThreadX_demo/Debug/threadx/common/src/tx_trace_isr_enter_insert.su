@@ -1,1 +1,1 @@
-tx_trace_isr_enter_insert.c:73:7:_tx_trace_isr_enter_insert	32	static,ignoring_inline_asm
+tx_trace_isr_enter_insert.c:73:7:_tx_trace_isr_enter_insert	64	static,ignoring_inline_asm

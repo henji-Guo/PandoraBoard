@@ -33,8 +33,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
  ../Core/Inc/spi.h ../Core/Inc/main.h ../Core/Inc/tim.h \
  ../Core/Inc/usart.h ../Core/Inc/gpio.h \
- F:/vscodespace/STM32CubeIDE_1.3.0/ThreadX_demo/threadx/common/inc/tx_api.h \
- F:/vscodespace/STM32CubeIDE_1.3.0/ThreadX_demo/threadx/ports/cortex_m4/gnu/inc/tx_port.h
+ F:/vscodespace/PandoraBoard/ThreadX_DEMO/ThreadX_demo/threadx/common/inc/tx_api.h \
+ F:/vscodespace/PandoraBoard/ThreadX_DEMO/ThreadX_demo/threadx/ports/cortex_m4/gnu/inc/tx_port.h
 
 ../Core/Inc/main.h:
 
@@ -112,6 +112,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Core/Inc/gpio.h:
 
-F:/vscodespace/STM32CubeIDE_1.3.0/ThreadX_demo/threadx/common/inc/tx_api.h:
+F:/vscodespace/PandoraBoard/ThreadX_DEMO/ThreadX_demo/threadx/common/inc/tx_api.h:
 
-F:/vscodespace/STM32CubeIDE_1.3.0/ThreadX_demo/threadx/ports/cortex_m4/gnu/inc/tx_port.h:
+F:/vscodespace/PandoraBoard/ThreadX_DEMO/ThreadX_demo/threadx/ports/cortex_m4/gnu/inc/tx_port.h:

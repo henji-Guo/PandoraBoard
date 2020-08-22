@@ -1,1 +1,1 @@
-tx_queue_delete.c:74:7:_tx_queue_delete	64	static,ignoring_inline_asm
+tx_queue_delete.c:74:7:_tx_queue_delete	88	static,ignoring_inline_asm

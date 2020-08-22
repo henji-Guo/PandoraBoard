@@ -1,1 +1,1 @@
-tx_thread_reset.c:73:7:_tx_thread_reset	48	static,ignoring_inline_asm
+tx_thread_reset.c:73:7:_tx_thread_reset	64	static,ignoring_inline_asm

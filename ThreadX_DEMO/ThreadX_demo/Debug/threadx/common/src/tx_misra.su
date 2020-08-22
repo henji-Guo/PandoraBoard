@@ -12,6 +12,8 @@ tx_misra.c:218:8:_tx_misra_timer_pointer_dif	24	static
 tx_misra.c:236:22:_tx_misra_timer_pointer_add	16	static
 tx_misra.c:251:6:_tx_misra_user_timer_pointer_get	24	static
 tx_misra.c:274:7:_tx_misra_thread_stack_check	48	static,ignoring_inline_asm
+tx_misra.c:316:7:_tx_misra_trace_event_insert	40	static
+tx_misra.c:386:8:_tx_misra_time_stamp_get	4	static
 tx_misra.c:403:7:_tx_misra_always_true	4	static
 tx_misra.c:416:10:_tx_misra_indirect_void_to_uchar_pointer_convert	16	static
 tx_misra.c:431:10:_tx_misra_uchar_to_indirect_uchar_pointer_convert	16	static
@@ -35,4 +37,9 @@ tx_misra.c:686:13:_tx_misra_ulong_to_thread_pointer_convert	16	static
 tx_misra.c:701:8:_tx_misra_timer_indirect_to_void_pointer_convert	16	static
 tx_misra.c:716:8:_tx_misra_const_char_to_char_pointer_convert	16	static
 tx_misra.c:731:13:_tx_misra_void_to_thread_pointer_convert	16	static
+tx_misra.c:748:9:_tx_misra_object_to_uchar_pointer_convert	16	static
+tx_misra.c:763:25:_tx_misra_uchar_to_object_pointer_convert	16	static
+tx_misra.c:778:19:_tx_misra_uchar_to_header_pointer_convert	16	static
+tx_misra.c:793:25:_tx_misra_uchar_to_entry_pointer_convert	16	static
+tx_misra.c:808:9:_tx_misra_entry_to_uchar_pointer_convert	16	static
 tx_misra.c:825:9:_tx_misra_char_to_uchar_pointer_convert	16	static

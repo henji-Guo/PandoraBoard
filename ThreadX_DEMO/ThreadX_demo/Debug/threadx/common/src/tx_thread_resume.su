@@ -1,1 +1,1 @@
-tx_thread_resume.c:73:7:_tx_thread_resume	48	static,ignoring_inline_asm
+tx_thread_resume.c:73:7:_tx_thread_resume	72	static,ignoring_inline_asm

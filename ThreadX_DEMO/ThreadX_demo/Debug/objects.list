@@ -9,6 +9,7 @@
 "Core/Src/tim.o"
 "Core/Src/usart.o"
 "Core/Startup/startup_stm32l475vetx.o"
+"Core/examples/thread_demo.o"
 "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.o"
 "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o"
 "Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.o"

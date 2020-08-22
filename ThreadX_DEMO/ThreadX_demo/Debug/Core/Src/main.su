@@ -1,6 +1,8 @@
-main.c:71:5:main	48	static
-main.c:123:6:SystemClock_Config	232	static
-main.c:173:6:thread1_entry	16	static
-main.c:182:6:thread2_entry	16	static
-main.c:191:6:tx_application_define	48	static
-main.c:226:6:Error_Handler	4	static
+main.c:81:5:main	8	static
+main.c:132:6:SystemClock_Config	232	static
+main.c:185:6:thread1_entry	32	static
+main.c:205:6:thread2_entry	24	static
+main.c:249:6:trace_thread_input	16	static
+main.c:268:6:my_entry_exit_notify	56	static
+main.c:287:6:tx_application_define	48	static
+main.c:336:6:Error_Handler	4	static
