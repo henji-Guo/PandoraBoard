@@ -1,1 +1,0 @@
-tx_semaphore_put.c:73:7:_tx_semaphore_put	72	static,ignoring_inline_asm

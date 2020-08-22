@@ -1,1 +1,0 @@
-tx_semaphore_create.c:73:7:_tx_semaphore_create	72	static,ignoring_inline_asm
