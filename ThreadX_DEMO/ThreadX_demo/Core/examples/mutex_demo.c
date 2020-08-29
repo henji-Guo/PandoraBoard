@@ -1,11 +1,18 @@
 /*
- *
+ * ===============================================
  * SPDX-License-Identifier: GPL-2.0-or-later
- * main.c
+ * 
+ * File_name : mutex_demo.c
+ * Author	 : henji
+ * Date		 : 2020年8月27日
+ * 
  * Change Logs:
- * Date           Author       Notes
- * 2020年8月25日     	  henji      the first version
+ * Date		            Author               Notes
+ * 2020年8月27日              henji              the first version
+ *
+ * ===============================================
  */
+#ifdef Mutex_demo
 /* USER CODE BEGIN Header */
 /**
  ******************************************************************************
@@ -73,15 +80,13 @@ TX_BYTE_POOL byte_pool_0;
 /* 指向内存的指针 */
 UCHAR *memory_ptr;
 
-
-/* 软定时器 */
-TX_TIMER timer_1;
-TX_TIMER timer_2;
+/*互斥量	临界区*/
+TX_MUTEX mutex_lock;
 
 
 UINT count_A = 0;
 UINT count_B = 0;
-CHAR buffer[21];
+CHAR buffer[20];
 
 /* Tracex使用 */
 /*跟踪缓冲区的内存大小*/
@@ -215,15 +220,56 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 
-
-void Timer_1_entry(ULONG expiration_input)
+void MyThread_1_entry(ULONG entry_input)
 {
-	HAL_UART_Transmit(&huart1, (uint8_t *)"I am timer 1 ", sizeof("I am timer 1 "), HAL_MAX_DELAY);
+
+	while (1)
+	{
+		/*临界区上锁*/
+		//tx_mutex_get(&mutex_lock,TX_WAIT_FOREVER);
+
+		/*临界区 ...*/
+
+		count_A ++;
+
+		/* 让给线程2 使得count_A & count_B 不同步 */
+		tx_thread_sleep(10);
+
+		count_B ++;
+		/*临界区释放锁*/
+		//tx_mutex_put(&mutex_lock);
+
+	}
 }
 
-void Timer_2_entry(ULONG expiration_input)
+void MyThread_2_entry(ULONG entry_input)
 {
-	HAL_UART_Transmit(&huart1, (uint8_t *)"I am timer 2 ", sizeof("I am timer 2 "), HAL_MAX_DELAY);
+
+	while (1)
+	{
+		/*临界区上锁*/
+		//tx_mutex_get(&mutex_lock,TX_WAIT_FOREVER);
+
+		/*临界区 ...*/
+
+		if(count_A == count_B)
+		{
+			my_printf("count_A = count_B", HAL_MAX_DELAY);
+		}
+		else
+		{
+			my_printf("count_A != count_B", HAL_MAX_DELAY);
+
+		}
+
+		count_A ++;
+		count_B ++;
+
+		/*临界区释放锁*/
+		//tx_mutex_put(&mutex_lock);
+
+		tx_thread_sleep(5);
+	}
 }
 
 void tx_application_define(void *first_unused_memory)
@@ -231,25 +277,52 @@ void tx_application_define(void *first_unused_memory)
 	/*使能追踪*/
 	trace_status = tx_trace_enable(&trace_buffer_start, trace_buffer_size,registry_entries);
 
-	/* 创建定时器1 */
-	tx_timer_create(&timer_1,      //定时器控制块
-					"timer 1",     //定时器名称
-					Timer_1_entry, //定时器入口函数
-					0,   //定时器入口参数
-					500, //定时器初始定时 500 Ticks
-					500, //定时器重载500 Ticks (0 ticks 一次性定时器   )
-					TX_AUTO_ACTIVATE //自动激活
-					);
+	/*创建一个内存池用于分配线程栈*/
+	tx_byte_pool_create(&byte_pool_0, 		//内存池的指针
+			"byte pool 0",//名称
+			first_unused_memory,//分配内存地址
+			DEMO_BYTE_POOL_SIZE//分配内存池大小
+			);
 
-	/* 创建定时器2 */
-	tx_timer_create(&timer_2,      //定时器控制块
-					"timer 2",     //定时器名称
-					Timer_2_entry, //定时器入口函数
-					0,   //定时器入口参数
-					100, //定时器初始定时 500 Ticks
-					100, //定时器重载500 Ticks (0 ticks 一次性定时器   )
-					TX_AUTO_ACTIVATE //自动激活
-					);
+	/*分配一个栈空间用于线程1*/
+	tx_byte_allocate(&byte_pool_0,		   //内存池的指针
+			(VOID**) &memory_ptr,		   //指向目标内存指针的指针
+			DEMO_STACK_SIZE,     //分配栈大小
+			TX_NO_WAIT		   //无论它是否成功，都会立即从该服务返回
+			);
+	/*线程1*/
+	tx_thread_create(&MyThread_1,	//线程控制块指针
+			"MyThread_1",//线程名字
+			MyThread_1_entry,//线程入口函数
+			0,//线程入口参数
+			memory_ptr,//线程的起始地址
+			DEMO_STACK_SIZE,//线程栈大小 K
+			3,//优先级3 (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			3,//禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START//线程自动启动
+			);
+	/*分配一个栈空间用于线程2*/
+	tx_byte_allocate(&byte_pool_0,		   //内存池的指针
+			(VOID**) &memory_ptr,		   //指向目标内存指针的指针
+			DEMO_STACK_SIZE,     //分配栈大小
+			TX_NO_WAIT		   //无论它是否成功，都会立即从该服务返回
+			);
+	/*线程2*/
+	tx_thread_create(&MyThread_2,	//线程控制块指针
+			"MyThread_2",//线程名字
+			MyThread_2_entry,//线程入口函数
+			0,//线程入口参数
+			memory_ptr,//线程的起始地址
+			DEMO_STACK_SIZE,//线程栈大小 K
+			1,//优先级1 (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			1,//禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START//线程自动启动
+			);
+
+	/*创建互斥量 临界区 */
+	tx_mutex_create(&mutex_lock,"mutex_lock",TX_NO_INHERIT);
 
 }
 
@@ -298,3 +371,5 @@ void assert_failed(uint8_t *file, uint32_t line)
 #endif /* USE_FULL_ASSERT */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+#endif
+

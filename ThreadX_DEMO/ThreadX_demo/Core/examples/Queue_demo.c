@@ -1,11 +1,19 @@
 /*
- *
+ * ===============================================
  * SPDX-License-Identifier: GPL-2.0-or-later
- * main.c
+ * 
+ * File_name : Queue_demo.c
+ * Author	 : henji
+ * Date		 : 2020年8月28日
+ * 
  * Change Logs:
- * Date           Author       Notes
- * 2020年8月25日     	  henji      the first version
+ * Date		            Author               Notes
+ * 2020年8月28日              henji              the first version
+ *
+ * ===============================================
  */
+
+#ifdef Queue_demo
 /* USER CODE BEGIN Header */
 /**
  ******************************************************************************
@@ -74,9 +82,9 @@ TX_BYTE_POOL byte_pool_0;
 UCHAR *memory_ptr;
 
 
-/* 软定时器 */
-TX_TIMER timer_1;
-TX_TIMER timer_2;
+/* 消息队列 */
+TX_QUEUE my_queue;
+
 
 
 UINT count_A = 0;
@@ -215,15 +223,72 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 
-
-void Timer_1_entry(ULONG expiration_input)
+void MyThread_1_entry(ULONG entry_input)
 {
-	HAL_UART_Transmit(&huart1, (uint8_t *)"I am timer 1 ", sizeof("I am timer 1 "), HAL_MAX_DELAY);
+    ULONG status;
+	INT thread_1_send = 'A';
+	INT special_send = 'Z';
+	CHAR buf_send[19];
+	while (1)
+	{
+
+		/* 紧急消息 */
+		if(thread_1_send == 'C')
+		{
+			status = tx_queue_front_send(&my_queue,      //消息队列控制块
+								         &special_send, //发送消息内容指针
+									     TX_WAIT_FOREVER //无限等待
+									     );
+					if(status == TX_SUCCESS)
+					{
+						sprintf(buf_send,"special_send %c ",special_send);
+						HAL_UART_Transmit(&huart1, (uint8_t*)buf_send, sizeof(buf_send), HAL_MAX_DELAY);
+					}
+
+		}
+		else if(thread_1_send == 'I')
+		{
+			tx_thread_terminate(&MyThread_1);
+		}
+		else
+		{
+			status = tx_queue_send(&my_queue,      //消息队列控制块
+								   &thread_1_send, //发送消息内容指针
+								   TX_WAIT_FOREVER //无限等待
+								   );
+					if(status == TX_SUCCESS)
+					{
+						sprintf(buf_send,"thread_1_send %c ",thread_1_send);
+						HAL_UART_Transmit(&huart1, (uint8_t*)buf_send, sizeof(buf_send), HAL_MAX_DELAY);
+					}
+		}
+
+		thread_1_send++;
+
+		tx_thread_sleep(1);
+	}
 }
 
-void Timer_2_entry(ULONG expiration_input)
+void MyThread_2_entry(ULONG entry_input)
 {
-	HAL_UART_Transmit(&huart1, (uint8_t *)"I am timer 2 ", sizeof("I am timer 2 "), HAL_MAX_DELAY);
+	    ULONG status;
+		INT thread_2_received;
+		CHAR buf_rec[21];
+		while (1)
+		{
+			status = tx_queue_receive(&my_queue, //消息队列控制块
+								      &thread_2_received,//发送消息内容指针
+					                  TX_WAIT_FOREVER //无限等待
+					              );
+			if(status == TX_SUCCESS)
+			{
+				sprintf(buf_rec,"thread_2_received %c ",thread_2_received);
+				HAL_UART_Transmit(&huart1, (uint8_t*)buf_rec, sizeof(buf_rec), HAL_MAX_DELAY);
+			}
+			tx_thread_sleep(4);
+
+		}
+
 }
 
 void tx_application_define(void *first_unused_memory)
@@ -231,25 +296,64 @@ void tx_application_define(void *first_unused_memory)
 	/*使能追踪*/
 	trace_status = tx_trace_enable(&trace_buffer_start, trace_buffer_size,registry_entries);
 
-	/* 创建定时器1 */
-	tx_timer_create(&timer_1,      //定时器控制块
-					"timer 1",     //定时器名称
-					Timer_1_entry, //定时器入口函数
-					0,   //定时器入口参数
-					500, //定时器初始定时 500 Ticks
-					500, //定时器重载500 Ticks (0 ticks 一次性定时器   )
-					TX_AUTO_ACTIVATE //自动激活
-					);
+	/*创建一个内存池用于分配线程栈*/
+	tx_byte_pool_create(&byte_pool_0, 		//内存池的指针
+			"byte pool 0",//名称
+			first_unused_memory,//分配内存地址
+			DEMO_BYTE_POOL_SIZE//分配内存池大小
+			);
 
-	/* 创建定时器2 */
-	tx_timer_create(&timer_2,      //定时器控制块
-					"timer 2",     //定时器名称
-					Timer_2_entry, //定时器入口函数
-					0,   //定时器入口参数
-					100, //定时器初始定时 500 Ticks
-					100, //定时器重载500 Ticks (0 ticks 一次性定时器   )
-					TX_AUTO_ACTIVATE //自动激活
-					);
+	/*分配一个栈空间用于线程1*/
+	tx_byte_allocate(&byte_pool_0,		   //内存池的指针
+			(VOID**) &memory_ptr,		   //指向目标内存指针的指针
+			DEMO_STACK_SIZE,     //分配栈大小
+			TX_NO_WAIT		   //无论它是否成功，都会立即从该服务返回
+			);
+	/*线程1*/
+	tx_thread_create(&MyThread_1,	//线程控制块指针
+			"MyThread_1",//线程名字
+			MyThread_1_entry,//线程入口函数
+			0,//线程入口参数
+			memory_ptr,//线程的起始地址
+			DEMO_STACK_SIZE,//线程栈大小 K
+			1,//优先级1 (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			1,//禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START//线程自动启动
+			);
+	/*分配一个栈空间用于线程2*/
+	tx_byte_allocate(&byte_pool_0,		   //内存池的指针
+			(VOID**) &memory_ptr,		   //指向目标内存指针的指针
+			DEMO_STACK_SIZE,     //分配栈大小
+			TX_NO_WAIT		   //无论它是否成功，都会立即从该服务返回
+			);
+	/*线程2*/
+	tx_thread_create(&MyThread_2,	//线程控制块指针
+			"MyThread_2",//线程名字
+			MyThread_2_entry,//线程入口函数
+			0,//线程入口参数
+			memory_ptr,//线程的起始地址
+			DEMO_STACK_SIZE,//线程栈大小 K
+			3,//优先级3 (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			3,//禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START//线程自动启动
+			);
+
+	/*分配一个空间用于消息队列*/
+		tx_byte_allocate(&byte_pool_0,//内存池的指针
+				(VOID**) &memory_ptr, //指向目标内存指针的指针
+				100,   //分配消息队列大小 100字节
+				TX_NO_WAIT //无论它是否成功，都会立即从该服务返回
+				);
+		/* 创建消息队列 */
+		tx_queue_create(&my_queue, //消息队列控制块
+				"my_queue",		   //消息队列名称
+				4,				   //每一个消息大小
+				memory_ptr,		   //消息队列地址
+				100				   //总大小100
+				);
+
 
 }
 
@@ -298,3 +402,4 @@ void assert_failed(uint8_t *file, uint32_t line)
 #endif /* USE_FULL_ASSERT */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+#endif

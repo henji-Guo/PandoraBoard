@@ -1,11 +1,15 @@
 /*
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
- * main.c
+ * tracex_demo.c
  * Change Logs:
  * Date           Author       Notes
- * 2020年8月25日     	  henji      the first version
+ * 2020年8月22日     	  henji      the first version
  */
+
+
+#ifdef TraceX_demo
+
 /* USER CODE BEGIN Header */
 /**
  ******************************************************************************
@@ -35,8 +39,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "tx_api.h"
-#include "stdio.h"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,31 +59,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-TX_THREAD MyThread_1;
-TX_THREAD MyThread_2;
-
-
-/*线程栈大小*/
-#define DEMO_STACK_SIZE 1024
-/*内存池总大小*/
-#define DEMO_BYTE_POOL_SIZE 1024*5
-/*内存块池总大小*/
-#define DEMO_BLOCK_POOL_SIZE 100
-/*内存字节池控制块*/
-TX_BYTE_POOL byte_pool_0;
-
-/* 指向内存的指针 */
-UCHAR *memory_ptr;
-
-
-/* 软定时器 */
-TX_TIMER timer_1;
-TX_TIMER timer_2;
-
-
-UINT count_A = 0;
-UINT count_B = 0;
-CHAR buffer[21];
+TX_THREAD my_thread_1;
+TX_THREAD my_thread_2;
+TX_THREAD trace_thread;
+uint8_t pData[] = "=========ThreadX=========\n";
+uint8_t pData1[] = "I am thread1 ";
+uint8_t pData2[] = "I am thread2 ";
 
 /* Tracex使用 */
 /*跟踪缓冲区的内存大小*/
@@ -95,14 +78,13 @@ UINT trace_status;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void my_printf(CHAR *s,INT var);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
-
+/* USER CODE END 0 */
 
 /**
  * @brief  The application entry point.
@@ -137,7 +119,6 @@ int main(void)
 	MX_TIM2_Init();
 	MX_TIM3_Init();
 	MX_SPI3_Init();
-
 	/* USER CODE BEGIN 2 */
 
 	tx_kernel_enter(); //threadx 入口
@@ -213,58 +194,150 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
-
-
-void Timer_1_entry(ULONG expiration_input)
+void thread1_entry(ULONG entry_input)
 {
-	HAL_UART_Transmit(&huart1, (uint8_t *)"I am timer 1 ", sizeof("I am timer 1 "), HAL_MAX_DELAY);
+
+	INT count = 0;
+	uint8_t init_data[] = "start now";
+	while (1)
+	{
+
+		HAL_UART_Transmit(&huart1, pData1, sizeof(pData1), HAL_MAX_DELAY);
+		if (count == 0)
+		{
+			HAL_UART_Transmit(&huart1, init_data, sizeof(init_data),
+			HAL_MAX_DELAY);
+		}
+		count++;
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_7 | GPIO_PIN_8);
+		tx_thread_sleep(100);
+	}
 }
 
-void Timer_2_entry(ULONG expiration_input)
+void thread2_entry(ULONG entry_input)
 {
-	HAL_UART_Transmit(&huart1, (uint8_t *)"I am timer 2 ", sizeof("I am timer 2 "), HAL_MAX_DELAY);
+	INT count = 0;
+	while (1)
+	{
+		HAL_UART_Transmit(&huart1, pData2, sizeof(pData2), HAL_MAX_DELAY);
+		if (count == 3)
+		{
+			/*挂起线程1*/
+			tx_thread_suspend(&my_thread_1);
+		}
+		else if (count == 6)
+		{
+			/*恢复线程1*/
+			tx_thread_resume(&my_thread_1);
+		}
+		else if (count == 9)
+		{
+			/*终止线程1*/
+			tx_thread_terminate(&my_thread_1);
+		}
+		else if (count == 12)
+		{
+			/*重置线程1*/
+			tx_thread_reset(&my_thread_1);
+			/*恢复线程1*/
+			tx_thread_resume(&my_thread_1);
+		}
+		else if (count == 13)
+		{
+			/*终止线程1*/
+			//tx_thread_terminate(&my_thread_1);
+			//tx_thread_terminate(&my_thread_2);
+		}
+		else
+		{
+			;
+		}
+		count++;
+
+		tx_thread_sleep(200);
+	}
+}
+
+void trace_thread_input(ULONG entry_input)
+{
+
+	while (1)
+	{
+		/*使能追踪*/
+		trace_status = tx_trace_enable(&trace_buffer_start, trace_buffer_size, registry_entries);
+		if (trace_status == TX_SUCCESS)
+		{
+			; //使能成功
+		}
+		if (trace_status == TX_NOT_DONE)
+		{
+			; //在追踪
+		}
+		tx_thread_sleep(100);
+	}
+}
+
+void my_entry_exit_notify(TX_THREAD *thread_ptr, UINT condition)
+{
+	uint8_t entry_data[] = " thread1-entry ";
+	uint8_t exit_data[] = " thread1-exit ";
+	/* Determine if the thread was entered or exited. */
+
+	if (condition == TX_THREAD_ENTRY)
+	{
+		/* Thread entry! */
+		HAL_UART_Transmit(&huart1, entry_data, sizeof(pData2), HAL_MAX_DELAY);
+	}
+	if (condition == TX_THREAD_EXIT)
+	{
+		/* Thread exit! */
+		HAL_UART_Transmit(&huart1, exit_data, sizeof(pData2), HAL_MAX_DELAY);
+	}
+
 }
 
 void tx_application_define(void *first_unused_memory)
 {
-	/*使能追踪*/
-	trace_status = tx_trace_enable(&trace_buffer_start, trace_buffer_size,registry_entries);
 
-	/* 创建定时器1 */
-	tx_timer_create(&timer_1,      //定时器控制块
-					"timer 1",     //定时器名称
-					Timer_1_entry, //定时器入口函数
-					0,   //定时器入口参数
-					500, //定时器初始定时 500 Ticks
-					500, //定时器重载500 Ticks (0 ticks 一次性定时器   )
-					TX_AUTO_ACTIVATE //自动激活
-					);
+	/*线程1*/
+	tx_thread_create(&my_thread_1,	//线程控制块指针
+			"my_thread1",//线程名字
+			thread1_entry,//线程入口函数
+			0,//线程入口参数
+			first_unused_memory,//线程的起始地址(这里偷懒,没有进行分配,直接使用未用的起始地址)
+			1024,//内存区域大小K
+			3,//优先级3  (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			3,//禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START//线程自动启动
+			);
+	/*线程2*/
+	tx_thread_create(&my_thread_2,	//线程控制块指针
+			"my_thread2",//线程名字
+			thread2_entry,//线程入口函数
+			0,//线程入口参数
+			first_unused_memory+1024,//线程的起始地址+1024 (-被前面线程用掉了)
+			1024,//内存区域大小K
+			2,//优先级2 (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			2,//禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START//线程自动启动
+			);
 
-	/* 创建定时器2 */
-	tx_timer_create(&timer_2,      //定时器控制块
-					"timer 2",     //定时器名称
-					Timer_2_entry, //定时器入口函数
-					0,   //定时器入口参数
-					100, //定时器初始定时 500 Ticks
-					100, //定时器重载500 Ticks (0 ticks 一次性定时器   )
-					TX_AUTO_ACTIVATE //自动激活
-					);
+	/*trace 线程*/
+	tx_thread_create(&trace_thread,	//线程控制块指针
+			"trace_thread",//线程名字
+			trace_thread_input,//线程入口函数
+			0,//线程入口参数
+			first_unused_memory+2048, 1024,	//内存区域大小K
+			1,//优先级2 (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			1,//禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START//线程自动启动
+			);
+	/*线程进入和退出时通知*/
+	tx_thread_entry_exit_notify(&my_thread_1, my_entry_exit_notify);
 
-}
-
-void my_printf(CHAR *s,INT var)
-{
-	if(var == HAL_MAX_DELAY)
-	{
-		sprintf(buffer,s);
-		HAL_UART_Transmit(&huart1, (uint8_t*)buffer, sizeof(buffer), HAL_MAX_DELAY);
-	}
-	else
-	{
-		sprintf(buffer,s,var);
-		HAL_UART_Transmit(&huart1, (uint8_t*)buffer, sizeof(buffer), HAL_MAX_DELAY);
-	}
 }
 /* USER CODE END 4 */
 
@@ -298,3 +371,6 @@ void assert_failed(uint8_t *file, uint32_t line)
 #endif /* USE_FULL_ASSERT */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+#endif
+

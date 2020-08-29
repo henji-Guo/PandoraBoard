@@ -1,7 +1,17 @@
 /*
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
- * main.c
+ * memory_demo.c
+ * Change Logs:
+ * Date           Author       Notes
+ * 2020年8月22日     	  henji      the first version
+ */
+
+#ifdef Memory_demo
+/*
+ *
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ * tracex_demo.c
  * Change Logs:
  * Date           Author       Notes
  * 2020年8月25日     	  henji      the first version
@@ -35,8 +45,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "tx_api.h"
-#include "stdio.h"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,8 +65,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-TX_THREAD MyThread_1;
-TX_THREAD MyThread_2;
+TX_THREAD my_thread_1;
+TX_THREAD my_thread_2;
+TX_THREAD trace_thread;
+uint8_t pData[] = "=========ThreadX=========\n";
+uint8_t pData1[] = "I am thread1 ";
+uint8_t pData2[] = "I am thread2 ";
 
 
 /*线程栈大小*/
@@ -67,21 +79,12 @@ TX_THREAD MyThread_2;
 #define DEMO_BYTE_POOL_SIZE 1024*5
 /*内存块池总大小*/
 #define DEMO_BLOCK_POOL_SIZE 100
-/*内存字节池控制块*/
+/*内存字节池控制指针*/
 TX_BYTE_POOL byte_pool_0;
-
+/*内存块池控制指针*/
+TX_BLOCK_POOL block_pool_0;
 /* 指向内存的指针 */
 UCHAR *memory_ptr;
-
-
-/* 软定时器 */
-TX_TIMER timer_1;
-TX_TIMER timer_2;
-
-
-UINT count_A = 0;
-UINT count_B = 0;
-CHAR buffer[21];
 
 /* Tracex使用 */
 /*跟踪缓冲区的内存大小*/
@@ -95,14 +98,13 @@ UINT trace_status;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void my_printf(CHAR *s,INT var);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
-
+/* USER CODE END 0 */
 
 /**
  * @brief  The application entry point.
@@ -137,7 +139,6 @@ int main(void)
 	MX_TIM2_Init();
 	MX_TIM3_Init();
 	MX_SPI3_Init();
-
 	/* USER CODE BEGIN 2 */
 
 	tx_kernel_enter(); //threadx 入口
@@ -213,58 +214,155 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
-
-
-void Timer_1_entry(ULONG expiration_input)
+void thread1_entry(ULONG entry_input)
 {
-	HAL_UART_Transmit(&huart1, (uint8_t *)"I am timer 1 ", sizeof("I am timer 1 "), HAL_MAX_DELAY);
+
+	INT count = 0;
+	uint8_t init_data[] = "start now";
+	while (1)
+	{
+		if (count == 0)
+		{
+			HAL_UART_Transmit(&huart1, init_data, sizeof(init_data),
+			HAL_MAX_DELAY);
+		}
+		else
+		{
+			HAL_UART_Transmit(&huart1, pData1, sizeof(pData1), HAL_MAX_DELAY);
+		}
+		count++;
+		HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_7 | GPIO_PIN_8);
+		tx_thread_sleep(30);
+	}
 }
 
-void Timer_2_entry(ULONG expiration_input)
+void thread2_entry(ULONG entry_input)
 {
-	HAL_UART_Transmit(&huart1, (uint8_t *)"I am timer 2 ", sizeof("I am timer 2 "), HAL_MAX_DELAY);
+	INT count = 0;
+	while (1)
+	{
+		HAL_UART_Transmit(&huart1, pData2, sizeof(pData2), HAL_MAX_DELAY);
+		if (count == 1)
+		{
+			/*分配一个内存块空间*/
+			 tx_byte_allocate(&byte_pool_0,		   //内存池的指针
+					 	 	  (VOID **)&memory_ptr,//指向目标内存指针的指针
+							  DEMO_BLOCK_POOL_SIZE,//分配内存块区域
+							  TX_NO_WAIT		   //无论它是否成功，都会立即从该服务返回
+							  );
+			 /*创建内存块*/
+			 tx_block_pool_create(&block_pool_0, 	 //内存块池的指针
+					 	 	 	 "block pool 0", 	 //内存块池名称
+								 10,			 	 //每块大小
+								 memory_ptr,     	 //指向目标内存指针的指针
+								 DEMO_BLOCK_POOL_SIZE//内存块池总字节数
+								 );
+			 /*分配内存块*/
+			 tx_block_allocate(&block_pool_0, //内存块池的指针
+					  (VOID **)&memory_ptr,   //指向目标内存指针的指针
+							   TX_NO_WAIT //  无论它成功与否，都会立即从该服务返回
+			 	 	 	 	   );
+			 /*释放*/
+			 tx_block_release(memory_ptr);
+
+		}
+		count++;
+
+		tx_thread_sleep(20);
+	}
 }
+
+void trace_thread_input(ULONG entry_input)
+{
+
+	while (1)
+	{
+		/*使能追踪*/
+		trace_status = tx_trace_enable(&trace_buffer_start, trace_buffer_size, registry_entries);
+		if (trace_status == TX_SUCCESS)
+		{
+			; //使能成功
+		}
+		if (trace_status == TX_NOT_DONE)
+		{
+			; //在追踪
+		}
+		tx_thread_sleep(10);
+	}
+}
+
 
 void tx_application_define(void *first_unused_memory)
 {
-	/*使能追踪*/
-	trace_status = tx_trace_enable(&trace_buffer_start, trace_buffer_size,registry_entries);
 
-	/* 创建定时器1 */
-	tx_timer_create(&timer_1,      //定时器控制块
-					"timer 1",     //定时器名称
-					Timer_1_entry, //定时器入口函数
-					0,   //定时器入口参数
-					500, //定时器初始定时 500 Ticks
-					500, //定时器重载500 Ticks (0 ticks 一次性定时器   )
-					TX_AUTO_ACTIVATE //自动激活
+
+	trace_status = tx_trace_enable(&trace_buffer_start, trace_buffer_size, registry_entries);
+	/*创建一个内存池用于分配线程栈*/
+	tx_byte_pool_create(&byte_pool_0, 		//内存池的指针
+					"byte pool 0",		//名称
+					first_unused_memory,//分配内存地址
+					DEMO_BYTE_POOL_SIZE //分配内存池大小
 					);
 
-	/* 创建定时器2 */
-	tx_timer_create(&timer_2,      //定时器控制块
-					"timer 2",     //定时器名称
-					Timer_2_entry, //定时器入口函数
-					0,   //定时器入口参数
-					100, //定时器初始定时 500 Ticks
-					100, //定时器重载500 Ticks (0 ticks 一次性定时器   )
-					TX_AUTO_ACTIVATE //自动激活
-					);
+	/*分配一个栈空间用于trace*/
+	 tx_byte_allocate(&byte_pool_0,		   //内存池的指针
+			 	 	  (VOID **)&memory_ptr,//指向目标内存指针的指针
+					  DEMO_STACK_SIZE,     //分配栈大小
+					  TX_NO_WAIT		   //无论它是否成功，都会立即从该服务返回
+					  );
 
-}
+	/*trace 线程*/
+	tx_thread_create(&trace_thread,	//线程控制块指针
+			"trace_thread",         //线程名字
+			trace_thread_input,//线程入口函数
+			0,               //线程入口参数
+			memory_ptr,		 //线程的起始地址
+			DEMO_STACK_SIZE, //内存区域大小K
+			1,               //优先级2 (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			1,               //禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START    //线程自动启动
+			);
 
-void my_printf(CHAR *s,INT var)
-{
-	if(var == HAL_MAX_DELAY)
-	{
-		sprintf(buffer,s);
-		HAL_UART_Transmit(&huart1, (uint8_t*)buffer, sizeof(buffer), HAL_MAX_DELAY);
-	}
-	else
-	{
-		sprintf(buffer,s,var);
-		HAL_UART_Transmit(&huart1, (uint8_t*)buffer, sizeof(buffer), HAL_MAX_DELAY);
-	}
+	/*分配一个栈空间用于线程1*/
+	 tx_byte_allocate(&byte_pool_0,		   //内存池的指针
+			 	 	  (VOID **)&memory_ptr,//指向目标内存指针的指针
+					  DEMO_STACK_SIZE,     //分配栈大小
+					  TX_NO_WAIT		   //无论它是否成功，都会立即从该服务返回
+					  );
+
+	/*创建线程1*/
+	tx_thread_create(&my_thread_1,	//线程控制块指针
+			"my_thread1",    //线程名字
+			thread1_entry,   //线程入口函数
+			0,				 //线程入口参数
+			memory_ptr,		 //线程的起始地址
+			DEMO_STACK_SIZE, //线程栈大小 K
+			3,				 //优先级3  (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			3,				 //禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START    //线程自动启动
+			);
+
+	/*分配一个栈空间用于线程2*/
+	 tx_byte_allocate(&byte_pool_0,		   //内存池的指针
+			 	 	  (VOID **)&memory_ptr,//指向目标内存指针的指针
+					  DEMO_STACK_SIZE,     //分配栈大小
+					  TX_NO_WAIT		   //无论它是否成功，都会立即从该服务返回
+					  );
+	/*线程2*/
+	tx_thread_create(&my_thread_2,	//线程控制块指针
+			"my_thread2",    //线程名字
+			thread2_entry,   //线程入口函数
+			0,				 //线程入口参数
+			memory_ptr,      //线程的起始地址
+			DEMO_STACK_SIZE, //线程栈大小 K
+			2,               //优先级2 (0~TX_MAX_PRIORITES-1)0  表示最高优先级
+			2,               //禁用抢占的最高优先级
+			TX_NO_TIME_SLICE,//时间切片值范围为 1 ~ 0xFFFF(TX_NO_TIME_SLICE = 0)
+			TX_AUTO_START    //线程自动启动
+			);
+
 }
 /* USER CODE END 4 */
 
@@ -298,3 +396,7 @@ void assert_failed(uint8_t *file, uint32_t line)
 #endif /* USE_FULL_ASSERT */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+
+
+#endif
