@@ -50,3 +50,13 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# user define
+*.asm*
+*.map*
+*.metadata*
+Debug/
+*.log
+*.d
+stlink-gdb-config.txt
+.gdbinit
